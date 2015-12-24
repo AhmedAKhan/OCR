@@ -28,7 +28,9 @@ app.use(express.static(__dirname + '/public'))
 
 
 app.get('/', function (req, res) {
-  res.end('Hi there!')
+  console.log("waiting on port 3000");
+  res.render('index', { title : 'Home' });
 })
 app.listen(3000)
 
+console.log("waiting on port 3000");
