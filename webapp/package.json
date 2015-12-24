@@ -1,0 +1,11 @@
+{
+  "name": "handwriting-converter",
+  "version": "1.0.0",
+  "description": "lets the user write a number and will convert that to a computer text",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ahmed Khan",
+  "license": "ISC"
+}
