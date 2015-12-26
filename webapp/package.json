@@ -1,17 +1,10 @@
 {
   "name": "handwriting-converter",
-  "version": "1.0.0",
-  "description": "lets the user write a number and will convert that to a computer text",
-  "main": "app.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Ahmed Khan",
-  "license": "ISC",
+  "main": "server.js",
   "dependencies": {
-    "express": "3.0.0alpha4",
-    "jade": "*",
-    "stylus": "*",
-    "nib": "*"
+    "express" : "~4.5.1",
+    "mongoose" : "~3.8.0",
+    "body-parser" : "~1.4.2",
+    "method-override" : "~2.0.2"
   }
 }

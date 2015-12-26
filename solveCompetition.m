@@ -13,7 +13,7 @@ h1 = sigmoid([ones(size(testData, 1), 1) testData] * Theta1');
 h2 = sigmoid([ones(size(testData, 1), 1) h1] * Theta2');
 [dummy, p] = max(h2, [], 2);
 
-p = (p != 10) .* p;
+p = (p != 10) .* p; % this makes it so that it converts all the 10's to 0
 
 save results.txt p;
 
@@ -21,3 +21,8 @@ save results.txt p;
 fprintf('... done\n');
 
 fflush(stdout);
+
+
+
+
+
