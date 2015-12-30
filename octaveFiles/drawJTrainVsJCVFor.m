@@ -3,7 +3,7 @@ function nothing = drawJTrainVsJCVFor(xAxis)
 fprintf('loading the training data ................');
 fflush(stdout); 
 
-allData = csvread('train.csv'); 	% load the data
+allData = csvread('../data/train.csv'); 	% load the data
 allData(1, :) = [];				% remove the first row because it does not contain any data
 fprintf('... done \n');
 

@@ -1,5 +1,5 @@
 %function K = findBestKValue(data)
-  allData = csvread('train.csv');
+  allData = csvread('../data/train.csv');
   allData(1, :) = []; 
 
   testRatio   = 0.1;

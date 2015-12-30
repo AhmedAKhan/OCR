@@ -1,6 +1,6 @@
 
-allData = csvread('test.csv'); 	% load the data
-load('ThetaValues.txt')			% load the theta values
+allData = csvread('../data/test.csv'); 	% load the data
+load('../data/ThetaValues.txt')			% load the theta values
 
 fprintf('started testing ..........................');
 fflush(stdout);
