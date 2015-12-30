@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <style>
+  body{
+    background-color:linen;
+  }
+  #canvasDiv{
+    height:28px;
+    width:28px;
+    background-color:white;
+  }
+  </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+</head>
+
+<body>
+
+  <p>This is above the canvas</p>
+  <button type="button" onclick="clearScreen()">Clear Screen</button>
+  <button type="button" onclick="sendRequest()">Get Result</button>
+  <button type="button" onclick="dance()">Dance </button>
+  <div id="canvasDiv"></div>
+  <p>This is below the canvas</p>
+
+  <div>
+    <p id="result">the result</p>
+  </div>
+
+  <script src="canvas.js"></script>
+  <script src="danceInput.js"></script>
+
+</body>
+
+</html>

@@ -9,7 +9,7 @@ module.exports = function(app, route){
 
   //register this endpoint with the application
   rest.register(app, route);
-  
+
   // return the middleware
   return function(req, res, next){
     next();

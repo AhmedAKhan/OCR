@@ -3,7 +3,7 @@
 fprintf('loading the training data ................');
 fflush(stdout); 
 
-allData = csvread('train.csv'); 	% load the data
+allData = csvread('data/train.csv'); 	% load the data
 allData(1, :) = [];				% remove the first row because it does not contain any data
 fprintf('... done \n');
 
@@ -65,6 +65,20 @@ initial_Theta2 = randInitializeWeights(hidden_layer_size, output_layer_size);
 initial_nn_params = [initial_Theta1(:) ; initial_Theta2(:)];
 
 fprintf('... done\n');
+
+
+
+
+
+fprintf('started Pre-process data...................');
+fflush(stdout);
+
+fprintf('......... done \n');
+fflush(stdout);
+
+
+
+
 fprintf('Training Neural Network...................');
 fflush(stdout);
 

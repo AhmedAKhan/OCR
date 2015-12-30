@@ -13,8 +13,9 @@ for(var i = 0; i < 28; i++){
     input = input + '0 ';
   }
 }
+
 execute('octave solveOneTestCase.m '+input, function(stdout){
-  console.log('octave solveOneTestCase.m ' + input);
+  console.log('octave ../solveOneTestCase.m ' + input);
   console.log("stdout");
   console.log(stdout);
   var result = stdout.substring(stdout.indexOf("=") + 1);

@@ -21,3 +21,9 @@ p
 % fprintf(p);
 
 
+function solveForOne(input)
+  % start predicting
+  h1 = sigmoid([ones(size(input, 1), 1) input] * Theta1');
+  h2 = sigmoid([ones(size(input, 1), 1) h1] * Theta2');
+  [dummy, p] = max(h2, [], 2);
+endfunction
