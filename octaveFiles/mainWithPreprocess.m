@@ -35,7 +35,8 @@ fprintf('... done \n');
 fprintf('parsing the data to get the inputs........')
 fflush(stdout);
 
-trainData = allTrainData>100; %remove the results 
+% biary threshold, if the pixel is has a value lower then 100, then it is 0, or else 1
+trainData = allTrainData>100;
 % now the train data is a matrix where each row represents the input to the nn and there are m samples inputs
 
 fprintf('... done\n');
@@ -49,6 +50,24 @@ output_layer_size = 10;
 fprintf('... done\n');
 
 fprintf('input_layer_size nodes: %d \n', input_layer_size);
+
+
+% --------------------------------------------- start preprocess-------------------------------------------------------
+
+fprintf('Initializing Neural Network Parameters ...');
+fflush(stdout);
+
+% for row = trainData
+%   row 
+% end
+
+fprintf('... done\n');
+fflush(stdout);
+
+% --------------------------------------------- end preprocess -------------------------------------------------------
+
+
+
 
 fprintf('Initializing Neural Network Parameters ...');
 fflush(stdout);

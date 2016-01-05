@@ -174,8 +174,8 @@ function getScreenData(){
   for(var j = 0; j < 28; j++){
     var curString = '';
     for(var i =0; i < 28; i++){
-      stringData = stringData + ' ' +data[i + j*28];
-      curString = curString + ' ' + data[i + j*28];
+      stringData = stringData + data[i + j*28];
+      curString = curString + data[i + j*28];
     }
     console.log(curString);
   }

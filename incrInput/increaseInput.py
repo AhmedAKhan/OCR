@@ -70,7 +70,7 @@ def boldImage(curImage):
   ]
 '''
 def thinOut(curImage):
-  print('going to call number of neightbors on row 1, for the pixel 0, 0 resut = ' + str(numberOfOnneighbors(curImage, 0,0)));
+  print('going to call number of neightbors on row 1, for the pixel 0, 0 resut = ' + str(numberOfOnneighbors(curImage, 1,1)) + ' pixel value at position is ' + str(curImage[1]));
   print('going to call number of neightbors on row 1, for the pixel 20, 10 result = ' + str(numberOfOnneighbors(curImage, 20,10)));
   print('going to call number of neightbors on row 1, for the pixel 10, 20 result = ' + str(numberOfOnneighbors(curImage, 10,20)));
   # print('going to call number of neightbors on row 1, for the pixel 10, 30 result = ' + str(numberOfOnneighbors(curImage, 10,30)));
