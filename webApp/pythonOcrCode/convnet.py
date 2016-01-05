@@ -116,7 +116,8 @@ def train():
 
 def restore():
   print("starting to restore the data ");
-  saver.restore(sess, "/tmp/model.ckpt")
+  saver.restore(sess, "./modelSaveData.ckpt");
+  # saver.restore(sess, "/tmp/model.ckpt")
   print("Model restored.")
 
 def runSomeCase():

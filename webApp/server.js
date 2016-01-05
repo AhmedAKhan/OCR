@@ -44,7 +44,7 @@ app.post('/ocr', function(req, res){
     exec('cd pythonOcrCode &&' + ' python3 convnet.py runCase "'+ input + '" && cd ..', function(error, stdout, stderr){
       console.log('stdout: ' + stdout);
       if(error != null){ console.log("got an error " + error);  res.send('got null for some reason, as the stdout');  return; }
-      var result = stdout.substring(stdout.indexOf("=") + 1);
+      var result = stdout.substring(stdout.indexOf("ArgMax:") + 7, stdout.indexOf("ArgMax:") + 1 + 7);
       result = result.trim();
       console.log("result is " + result + "\n\n\n");
       res.send(result);
