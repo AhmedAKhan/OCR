@@ -1,5 +1,5 @@
 # import the necessary libraries
-# import input_data
+import input_data
 import tensorflow as tf
 import numpy as np
 import sys; # to get the command line argument
@@ -111,34 +111,47 @@ def train():
       x: mnist.test.images, y_: mnist.test.labels, keep_prob: 1.0}))
 
   print("going to save the session");
-  save_path = saver.save(sess, "/tmp/model.ckpt")
+  save_path = saver.save(sess, "./model.ckpt")
+  # save_path = saver.save(sess, "/tmp/model.ckpt")
   print("Model saved in file: %s" % save_path)
 
 def restore():
   print("starting to restore the data ");
-  saver.restore(sess, "./modelSaveData.ckpt");
-  # saver.restore(sess, "/tmp/model.ckpt")
+  saver.restore(sess, "modelSaveData.ckpt")
   print("Model restored.")
 
-def runSomeCase():
+def runSomeCasenum(i=0):
   #### take the data
   mnist = input_data.read_data_sets('MNIST_data', one_hot=True);
 
   print("starting to restore the data ");
-  saver.restore(sess, "/tmp/model.ckpt")
+  saver.restore(sess, "./modelSaveData.ckpt")
+  # saver.restore(sess, "/tmp/model.ckpt")
   print("Model restored.")
 
   print("getting values");
-  resultVars = y_conv.eval(feed_dict={x:mnist.test.images[0].reshape(1,784), keep_prob:1.0});
-  result = tf.argmax(resultVars,1)
-  print (result);
+  resultVars = y_conv.eval(feed_dict={x:mnist.test.images[i].reshape(1,784), keep_prob:1.0});
+  result = tf.argmax(resultVars,1);
+  print ("the result that was achieved was " + str(result.eval())); # print the result
+  print ("0 ");
+  abc = tf.constant(mnist.test.labels[i]);
+  print ("0.5 abc " + str(abc));
+  actualResult = tf.argmax(abc, 0);
+  print ("1 actualResult: " + str(actualResult));
+  intResult = actualResult.eval();
+  print ("2 intResult: " + str(intResult));
+  print ("the correct number is " + str(intResult));
 
 def runCase(image):
   restore(); ## restore the last session
+
   print("getting values");
   resultVars = y_conv.eval(feed_dict={x:image, keep_prob:1.0}); # run the neural network with the image, and get the result vector
-  result = tf.argmax(resultVars,1); # get the max value and make that the prediction
-  print (result); # print the result
+  result = tf.argmax(resultVars,1).eval(feed_dict={x:image , keep_prob:1.0 }); # get the max value and make that the prediction
+  print ("the result that was achieved was " + str(result)); # print the result
+  print ("=" + str(result)); # print the result
+
+
   return result; # and then return it
 
 def parseInput(stringInput):
@@ -157,6 +170,7 @@ def main():
   elif (sys.argv[1] == 'train'): train();
   elif (sys.argv[1] == 'restore'): restore();
   elif (sys.argv[1] == 'runCase'): runCase(parseInput(sys.argv[2]));
+  elif (sys.argv[1] == 'runSomeCasenum'): runSomeCasenum(sys.argv[2]);
   print("done");
 
 
