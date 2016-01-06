@@ -38,10 +38,9 @@ app.post('/ocr', function(req, res){
 
     console.log(input);
 
-    // exec('cd ocrCode && octave solveOneTestCase.m '+input + ' && cd ..', function(error, stdout, stderr){
-      // example of how to use the python code
-      //python3 convnet.py runCase '0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000'
-    exec('cd pythonOcrCode &&' + ' python3 convnet.py runCase "'+ input + '" && cd ..', function(error, stdout, stderr){
+    // exec('cd ../tensflowCode/ &&' + ' python3 convnet.py runCase "'+ input + '" && cd ..', function(error, stdout, stderr){
+    // exec('cd pythonOcrCode &&' + ' python3 convnet.py runCase "'+ input + '" && cd ..', function(error, stdout, stderr){
+    exec('cd ../tensflowCode/ &&' + ' python3 convnet.py runCase "'+ input + '" && cd ../webApp  ', function(error, stdout, stderr){
       console.log('stdout: ' + stdout);
       if(error != null){ console.log("got an error " + error);  res.send('got null for some reason, as the stdout');  return; }
       var result = stdout.substring(stdout.indexOf("=[") + 2, stdout.indexOf("=[") + 1 + 2);
