@@ -1,7 +1,20 @@
 
+
 // set the dimensions of the canvas
-var canvasWidth = 28;
-var canvasHeight = 28;
+var canvasWidth = 28 * 4;
+var canvasHeight = 28 * 4;
+
+var rescalledHeight = 28;
+var rescalledWidth = 28;
+
+// rescalled grid
+rescaledGrid = [];
+for(var i = 0; i < 28; i++){
+  for(var j =0; j < 28; j++){
+    rescaledGrid.push(0);
+  }
+}
+
 
 // get the canvas
 var canvasDiv = document.getElementById('canvasDiv');
@@ -99,12 +112,101 @@ function clearScreen(){
   redraw();
 }
 
+function getScreenData(){
+  // console.log("0. started getting screen data");
+  // make a blank canvas
+  var data = [];
+  for(var i = 0; i < canvasWidth; i++){
+    for(var j = 0; j < canvasHeight; j++){
+      data.push(0);
+    }
+  }
+
+  // console.log("0.2 dont the first part, going to print all zeros");
+  // console.log(data);
+  // add the image on the data
+  for(var i = 0; i < clickX.length; i++){
+    var xPos = clickX[i];
+    var yPos = clickY[i];
+    // console.log("xPos: " + xPos + " yPos: " + yPos + " (xPos+yPos*canvasWidth):"+(xPos+yPos*canvasWidth));
+    if(xPos + yPos * canvasWidth >= canvasWidth*canvasHeight) continue;
+    data[xPos + yPos * canvasWidth] = 1;
+  }
+  // console.log("0.9 done the function going to print data");
+  // console.log(data)
+  return data;
+}
+
+function rescaleData(data, dataWdith, dataHeight){
+  console.log("2 starting rescale function");
+  var oldWidth = dataWdith;   // canvasWidth;
+  var oldHeight = dataHeight; // canvasHeight;
+  var newWidth = rescalledWidth;
+  var newHeight = rescalledHeight;
+  console.log("oldWidth: " + oldWidth + " oldHeight: " + oldHeight + " newWidth: " + newWidth + " newHeight: " + newHeight);
+
+  // if the size is smaller then 28 by 28, then the neural network would not be able to find the answer so, end this function and spit out an error
+  if(oldWidth <  dataWdith || oldHeight < dataHeight)
+    { console.log("input size is smaller then 28 by 28"); return data; }
+  var rescaledData = [];
+  for(var i = 0; i < newWidth; i++){
+    for(var j = 0; j < newHeight; j++){
+      rescaledData.push(0);
+    }
+  }
+  console.log("2 the input data is ");
+  console.log(data);
+  console.log("the so far output is ");
+  console.log(rescaledData);
+
+  // rescalled variables, rfx = rescale factor x, and rfy = rescale factor y .
+  // these represent the number of pixels in the old image equalling to
+  var rfx = dataWdith/newWidth;
+  var rfy = dataHeight/newHeight;
+  console.log("2.5 going to print rfx: " + rfx + " and rfy: " + rfy);
+
+  // actually rescale the data
+  for(var i = 0; i < newWidth; i++){
+    for(var j = 0; j < newHeight; j++){
+      // make this pixel equal to the average of the rfx and rfy pixels
+      var averagePixel = 0;
+      for(var incx = 0; incx < rfx ; incx++ ){
+        for(var incy = 0; incy < rfy; incy++){
+          var x = i * rfx + incx;// x = i * rfx + incx;
+          var y = j * rfy + incy;// y = j * rfy + incy;
+          averagePixel += data[ x + y*dataWdith];
+        }
+      }
+      averagePixel = averagePixel/(rfx*rfy)
+      rescaledData[i + j * newWidth] = averagePixel;
+    }
+  }
+
+  console.log("2.9 going to return rescaled data, also going to print it out");
+  console.log(rescaledData);
+  return rescaledData;
+}
+
 function redraw2(){
   context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
 
   context.strokeStyle = "#000000";
   context.lineJoin = "round";
   context.lineWidth = 1;
+
+
+
+  console.log("-1.  inside redraw for main ");
+  var screenData = getScreenData();
+  console.log("1  going to draw the origin screen data");
+  console.log(screenData);
+  rescaledGrid = rescaleData(screenData, canvasWidth, canvasHeight);
+  console
+  console.log("2 got the rescaeled data, going to redraw the canvas");
+  console.log(rescaledGrid);
+  // redrawSecondCanvasVariable();
+  globel.redrawc2(rescaledGrid);
+  console.log("3  inside redraw for main canvas ");
 
   // context.fillRect(4,4,1,1);
   // context.fillRect(5,4,1,1);
@@ -114,6 +216,10 @@ function redraw2(){
   for(var i =0; i < clickX.length;i++){
     context.fillRect(clickX[i], clickY[i], 1,1);
   }
+
+
+
+
   // for(var i=0; i < clickX.length; i++) {
   //   context.beginPath();
   //   context.moveTo(clickX[i], clickY[i]);
@@ -149,37 +255,20 @@ function redraw(){
   // }
 }
 
-function getScreenData(){
-  // make a blank canvas
-  var data = [];
-  for(var i = 0; i < 28; i++){
-    for(var j = 0; j < 28; j++){
-      data.push(0);
-    }
-  }
-
-  // add the image on the data
-  for(var i = 0; i < clickX.length; i++){
-    var xPos = clickX[i];
-    var yPos = clickY[i];
-    console.log("xPos: " + xPos + " yPos: " + yPos + " (xPos+yPos*28):"+(xPos+yPos*28));
-    if(xPos + yPos * 28 >= 28*28) continue;
-    data[xPos + yPos * 28] = 1;
-  }
-  console.log("data");
-  console.log(data);
+function parseScreenData(){
+  var data = getScreenData();
+  data = rescaleData(data, canvasWidth, canvasHeight);
 
   // convert the data to a string
   var stringData = '';
   for(var j = 0; j < 28; j++){
     var curString = '';
     for(var i =0; i < 28; i++){
-      stringData = stringData + data[i + j*28];
-      curString = curString + data[i + j*28];
+      stringData = stringData + ((data[i + j*28] > 0)? "1":"0");
+      curString = curString + ((data[i + j*28] > 0)? "1":"0");
     }
-    console.log(curString);
+    // console.log("j: " + j + " str: "+ curString);
   }
-
   return stringData;// return the data converted to a string
 }
 
@@ -195,7 +284,10 @@ function sendRequest(){
   //xhttp.open("GET", "http://localhost:3000/", true);
   xhttp.open("POST", "http://localhost:3000/ocr", true);
   xhttp.setRequestHeader("Content-type", "drawing-data");
-  xhttp.send(getScreenData());
+  console.log("sending the request");
+  var data = parseScreenData();
+  console.log("the resulting text is " + data);
+  xhttp.send(data);
 }
 
 
