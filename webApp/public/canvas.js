@@ -282,8 +282,6 @@ function redraw2(){
   context.lineJoin = "round";
   context.lineWidth = 1;
 
-
-
   console.log("-1.  inside redraw for main ");
   var screenData = getScreenData();
   console.log("1  going to draw the origin screen data");
@@ -292,28 +290,10 @@ function redraw2(){
   console
   console.log("2 got the rescaeled data, going to redraw the canvas");
   console.log(rescaledGrid);
-  redrawc2(rescaledGrid);
+  redrawSecondCanvas(rescaledGrid);
   console.log("3  inside redraw for main canvas ");
 
-  // context.fillRect(4,4,1,1);
-  // context.fillRect(5,4,1,1);
-  // context.fillRect(6,4,1,1);
-  // context.fillRect(7,4,1,1);
-
-  for(var i =0; i < clickX.length;i++){
-    context.fillRect(clickX[i], clickY[i], 1,1);
-  }
-
-
-
-
-  // for(var i=0; i < clickX.length; i++) {
-  //   context.beginPath();
-  //   context.moveTo(clickX[i], clickY[i]);
-  //   context.lineTo(clickX[i], clickY[i]);
-  //   context.closePath();
-  //   context.stroke();
-  // }
+  for(var i =0; i < clickX.length;i++) context.fillRect(clickX[i], clickY[i], 1,1);
 }
 // redraws the screen
 function redraw(){
