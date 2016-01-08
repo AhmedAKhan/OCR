@@ -1,13 +1,13 @@
-
+//------------------------------ declare variables -----------------------------------------------------------------------
 
 // set the dimensions of the canvas
 var canvasWidth = 28 * 4;
 var canvasHeight = 28 * 4;
 
-var rescalledHeight = 28;
-var rescalledWidth = 28;
+var rescaledHeight = 28;
+var rescaledWidth = 28;
 
-// rescalled grid
+// rescaled grid
 rescaledGrid = [];
 for(var i = 0; i < 28; i++){
   for(var j =0; j < 28; j++){
@@ -15,6 +15,12 @@ for(var i = 0; i < 28; i++){
   }
 }
 
+
+//------------------------------ end declare variables -----------------------------------------------------------------------
+
+
+
+//------------------------------ make the canvas -----------------------------------------------------------------------
 
 // get the canvas
 var canvasDiv = document.getElementById('canvasDiv');
@@ -51,7 +57,64 @@ $('#canvas').mouseup(function(e){
 $('#canvas').mouseleave(function(e){
   paint = false;
 });
+//------------------------------ end making canvas -----------------------------------------------------------------------
 
+
+
+//------------------------------ start helper functions  -----------------------------------------------------------------------
+
+
+function getScreenData(){
+  // console.log("0. started getting screen data");
+  // make a blank canvas
+  var data = [];
+  for(var i = 0; i < canvasWidth; i++){
+    for(var j = 0; j < canvasHeight; j++){
+      data.push(0);
+    }
+  }
+
+  // console.log("0.2 dont the first part, going to print all zeros");
+  // console.log(data);
+  // add the image on the data
+  for(var i = 0; i < clickX.length; i++){
+    var xPos = clickX[i];
+    var yPos = clickY[i];
+    // console.log("xPos: " + xPos + " yPos: " + yPos + " (xPos+yPos*canvasWidth):"+(xPos+yPos*canvasWidth));
+    if(xPos + yPos * canvasWidth >= canvasWidth*canvasHeight) continue;
+    data[xPos + yPos * canvasWidth] = 1;
+  }
+  // console.log("0.9 done the function going to print data");
+  // console.log(data)
+  return data;
+}
+
+
+function parseScreenData(){
+  var data = getScreenData();
+  data = getRescaleData(data);
+
+  // convert the data to a string
+  var stringData = '';
+  for(var j = 0; j < 28; j++){
+    var curString = '';
+    for(var i =0; i < 28; i++){
+      stringData = stringData + ((data[i + j*28] > 0)? "1":"0");
+      curString = curString + ((data[i + j*28] > 0)? "1":"0");
+    }
+    // console.log("j: " + j + " str: "+ curString);
+  }
+  return stringData;// return the data converted to a string
+}
+
+
+//------------------------------ end helper functions  -----------------------------------------------------------------------
+
+
+
+
+
+//------------------------------ start drawing functions -----------------------------------------------------------------------
 var clickX = new Array();
 var clickY = new Array();
 var clickDrag = new Array();
@@ -112,41 +175,11 @@ function clearScreen(){
   redraw();
 }
 
-function getScreenData(){
-  // console.log("0. started getting screen data");
-  // make a blank canvas
-  var data = [];
-  for(var i = 0; i < canvasWidth; i++){
-    for(var j = 0; j < canvasHeight; j++){
-      data.push(0);
-    }
-  }
-
-  // console.log("0.2 dont the first part, going to print all zeros");
-  // console.log(data);
-  // add the image on the data
-  for(var i = 0; i < clickX.length; i++){
-    var xPos = clickX[i];
-    var yPos = clickY[i];
-    // console.log("xPos: " + xPos + " yPos: " + yPos + " (xPos+yPos*canvasWidth):"+(xPos+yPos*canvasWidth));
-    if(xPos + yPos * canvasWidth >= canvasWidth*canvasHeight) continue;
-    data[xPos + yPos * canvasWidth] = 1;
-  }
-  // console.log("0.9 done the function going to print data");
-  // console.log(data)
-  return data;
-}
-
-function rescaleData(data, dataWdith, dataHeight){
-  console.log("2 starting rescale function");
-  var oldWidth = dataWdith;   // canvasWidth;
-  var oldHeight = dataHeight; // canvasHeight;
-  var newWidth = rescalledWidth;
-  var newHeight = rescalledHeight;
+function getRescaleData(data, oldWidth=canvasWidth, oldHeight=canvasHeight, newWidth=rescaledWidth, newHeight=rescaledHeight){
   console.log("oldWidth: " + oldWidth + " oldHeight: " + oldHeight + " newWidth: " + newWidth + " newHeight: " + newHeight);
 
   // if the size is smaller then 28 by 28, then the neural network would not be able to find the answer so, end this function and spit out an error
-  if(oldWidth <  dataWdith || oldHeight < dataHeight)
+  if(oldWidth <  newWidth || oldHeight < newHeight)
     { console.log("input size is smaller then 28 by 28"); return data; }
   var rescaledData = [];
   for(var i = 0; i < newWidth; i++){
@@ -159,10 +192,10 @@ function rescaleData(data, dataWdith, dataHeight){
   console.log("the so far output is ");
   console.log(rescaledData);
 
-  // rescalled variables, rfx = rescale factor x, and rfy = rescale factor y .
+  // rescaled variables, rfx = rescale factor x, and rfy = rescale factor y .
   // these represent the number of pixels in the old image equalling to
-  var rfx = dataWdith/newWidth;
-  var rfy = dataHeight/newHeight;
+  var rfx = oldWidth/newWidth;
+  var rfy = oldHeight/newHeight;
   console.log("2.5 going to print rfx: " + rfx + " and rfy: " + rfy);
 
   // actually rescale the data
@@ -174,7 +207,7 @@ function rescaleData(data, dataWdith, dataHeight){
         for(var incy = 0; incy < rfy; incy++){
           var x = i * rfx + incx;// x = i * rfx + incx;
           var y = j * rfy + incy;// y = j * rfy + incy;
-          averagePixel += data[ x + y*dataWdith];
+          averagePixel += data[ x + y*oldWidth];
         }
       }
       averagePixel = averagePixel/(rfx*rfy)
@@ -200,12 +233,11 @@ function redraw2(){
   var screenData = getScreenData();
   console.log("1  going to draw the origin screen data");
   console.log(screenData);
-  rescaledGrid = rescaleData(screenData, canvasWidth, canvasHeight);
+  rescaledGrid = getRescaleData(screenData);
   console
   console.log("2 got the rescaeled data, going to redraw the canvas");
   console.log(rescaledGrid);
-  // redrawSecondCanvasVariable();
-  globel.redrawc2(rescaledGrid);
+  redrawc2(rescaledGrid);
   console.log("3  inside redraw for main canvas ");
 
   // context.fillRect(4,4,1,1);
@@ -254,23 +286,13 @@ function redraw(){
   //    context.stroke();
   // }
 }
+//------------------------------ end drawing functions  -----------------------------------------------------------------------
 
-function parseScreenData(){
-  var data = getScreenData();
-  data = rescaleData(data, canvasWidth, canvasHeight);
 
-  // convert the data to a string
-  var stringData = '';
-  for(var j = 0; j < 28; j++){
-    var curString = '';
-    for(var i =0; i < 28; i++){
-      stringData = stringData + ((data[i + j*28] > 0)? "1":"0");
-      curString = curString + ((data[i + j*28] > 0)? "1":"0");
-    }
-    // console.log("j: " + j + " str: "+ curString);
-  }
-  return stringData;// return the data converted to a string
-}
+
+
+
+//------------------------------ start server functions -----------------------------------------------------------------------
 
 function sendRequest(){
   var xhttp = new XMLHttpRequest();
@@ -290,6 +312,4 @@ function sendRequest(){
   xhttp.send(data);
 }
 
-
-
-
+//------------------------------ end server functions  -----------------------------------------------------------------------
