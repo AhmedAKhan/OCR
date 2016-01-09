@@ -4,6 +4,7 @@
 var canvasWidth = 28 * 4;
 var canvasHeight = 28 * 4;
 
+// this is the height and width of the dimension of the shape that will get sent to the server
 var rescaledHeight = 28;
 var rescaledWidth = 28;
 
@@ -348,3 +349,7 @@ function sendRequest(){
 }
 
 //------------------------------ end server functions  -----------------------------------------------------------------------
+
+
+
+
