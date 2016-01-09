@@ -21,16 +21,56 @@ for(var i = 0; i < 28; i++){
 
 
 
+//------------------------------ make the canvas larger one -----------------------------------------------------------------------
+
+// get the canvas
+var canvasDiv = document.getElementById('canvasDiv');
+canvas = document.createElement('canvas');
+canvas.setAttribute('width', canvasWidth);
+canvas.setAttribute('height', canvasHeight);
+canvas.setAttribute('id', 'canvas');
+canvasDiv.appendChild(canvas);
+if(typeof G_vmlCanvasManager != 'undefined') {
+    canvas = G_vmlCanvasManager.initElement(canvas);
+}
+context = canvas.getContext("2d");
+
+$('#canvas').mousedown(function(e){
+  var mouseX = e.pageX - this.offsetLeft;
+  var mouseY = e.pageY - this.offsetTop;
+
+  paint = true;
+  addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
+  redraw();
+});
+
+$('#canvas').mousemove(function(e){
+  if(paint){
+    addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop, true);
+    redraw();
+  }
+});
+
+$('#canvas').mouseup(function(e){
+  paint = false;
+});
+
+$('#canvas').mouseleave(function(e){
+  paint = false;
+});
+//------------------------------ end making canvas larger one  -----------------------------------------------------------------------
+
+
 
 
 //------------------------------ start making canvas smaller one -----------------------------------------------------------------------
 // get the second canvas
-var canvasDivSmall = document.getElementById('canvasDiv2');
+var canvasDiv = document.getElementById('canvasDiv2');
 canvas = document.createElement('canvas');
 canvas.setAttribute('width', 28);
 canvas.setAttribute('height', 28);
 canvas.setAttribute('id', 'canvas');
-canvasDivSmall.appendChild(canvas);
+canvasDiv.appendChild(canvas);
 if(typeof G_vmlCanvasManager != 'undefined') {
     canvas = G_vmlCanvasManager.initElement(canvas);
 }
@@ -38,7 +78,7 @@ contextScalled = canvas.getContext("2d");
 
 function redrawSecondCanvas(rescaledGrid){
   console.log("2.0 inside the redraw canvas");
-  // contextScalled.clearRect(0, 0, contextScalled.canvas.width, contextScalled.canvas.height); // Clears the canvas
+  contextScalled.clearRect(0, 0, contextScalled.canvas.width, contextScalled.canvas.height); // Clears the canvas
 
   contextScalled.strokeStyle = "#000000";
   contextScalled.lineJoin = "round";
@@ -77,50 +117,6 @@ function redrawSecondCanvas(rescaledGrid){
 //------------------------------ end making canvas smaller one  -----------------------------------------------------------------------
 
 
-
-
-//------------------------------ make the canvas larger one -----------------------------------------------------------------------
-
-// get the canvas
-var canvasDivLarge = document.getElementById('canvasDiv');
-var canvasLarge = document.createElement('canvas');
-canvasLarge.setAttribute('width', canvasWidth);
-canvasLarge.setAttribute('height', canvasHeight);
-canvasLarge.setAttribute('id', 'canvasDiv');
-canvasDivLarge.appendChild(canvasLarge);
-if(typeof G_vmlCanvasManager != 'undefined') {
-    canvasDivLarge = G_vmlCanvasManager.initElement(canvasLarge);
-}
-context = canvasLarge.getContext("2d");
-
-$('#canvasDiv').mousedown(function(e){
-  var mouseX = e.pageX - this.offsetLeft;
-  var mouseY = e.pageY - this.offsetTop;
-
-  paint = true;
-  addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
-  // redraw();
-});
-
-$('#canvasDiv').mousemove(function(e){
-  if(paint){
-    addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop, true);
-    // redraw();
-  }
-});
-
-$('#canvasDiv').mouseup(function(e){
-  paint = false;
-});
-
-$('#canvasDiv').mouseleave(function(e){
-  paint = false;
-});
-//------------------------------ end making canvas larger one  -----------------------------------------------------------------------
-
-
-
-
 //------------------------------ start helper functions  -----------------------------------------------------------------------
 
 
@@ -153,7 +149,6 @@ function getScreenData(){
 function parseScreenData(){
   var data = getScreenData();
   data = getRescaleData(data);
-  // var data = rescaledGrid;
 
   // convert the data to a string
   var stringData = '';
@@ -166,6 +161,74 @@ function parseScreenData(){
     // console.log("j: " + j + " str: "+ curString);
   }
   return stringData;// return the data converted to a string
+}
+
+
+//------------------------------ end helper functions  -----------------------------------------------------------------------
+
+
+
+
+
+//------------------------------ start drawing functions -----------------------------------------------------------------------
+var clickX = new Array();
+var clickY = new Array();
+var clickDrag = new Array();
+var paint;
+
+function addClick(x, y, dragging)
+{
+  // clickX.push(x);
+  // clickY.push(y);
+  // clickDrag.push(dragging);
+
+  // new version start
+  // middle
+  clickX.push(x);
+  clickY.push(y);
+
+  // left
+  clickX.push(x-1);
+  clickY.push(y);
+
+  // topleft
+  clickX.push(x-1);
+  clickY.push(y-1);
+
+  // top
+  clickX.push(x);
+  clickY.push(y-1);
+
+  //top right
+  clickX.push(x+1);
+  clickY.push(y-1);
+
+  //right
+  clickX.push(x+1);
+  clickY.push(y);
+
+  // bottom right
+  clickX.push(x+1);
+  clickY.push(y+1);
+
+  // bottom
+  clickX.push(x);
+  clickY.push(y+1);
+
+  // bottom left
+  clickX.push(x-1);
+  clickY.push(y+1);
+}
+
+// this will clear the screen when called
+function clearScreen(){
+  console.log("inside the clear screen function");
+
+  // sendDataToServer();
+
+  clickX = [];
+  clickY = [];
+  redraw();
 }
 
 function getRescaleData(data, oldWidth=canvasWidth, oldHeight=canvasHeight, newWidth=rescaledWidth, newHeight=rescaledHeight){
@@ -213,138 +276,25 @@ function getRescaleData(data, oldWidth=canvasWidth, oldHeight=canvasHeight, newW
   return rescaledData;
 }
 
-function updatePositionInRescaledData(x,y,val){
-  if(val > rescaledGrid[x + y*rescaledWidth]){
-    rescaledGrid[x + y * rescaledWidth] = val;
-    addClick2(x,y);
-  }
-}
-
-//------------------------------ end helper functions  -----------------------------------------------------------------------
-
-
-
-
-
-//------------------------------ start drawing functions -----------------------------------------------------------------------
-var clickX = new Array();
-var clickY = new Array();
-var clickDrag = new Array();
-var paint;
-
-function addClick2(x, y){
-  console.log("going to draw at " + x + " ");
-  contextScalled.strokeStyle = "#000000";
-  contextScalled.lineJoin = "round";
-  contextScalled.lineWidth = 1;
-  contextScalled.fillRect(x,y,1,1);
-}
-
-function addClick(x, y, dragging){
-  // clickX.push(x);
-  // clickY.push(y);
-  // clickDrag.push(dragging);
-
-  // new version start
-  // middle
-  clickX.push(x);
-  clickY.push(y);
-  context.fillRect(x,y,1,1);
-
-  // left
-  clickX.push(x-1);
-  clickY.push(y);
-  context.fillRect(x-1,y,1,1); // left
-
-  // topleft
-  clickX.push(x-1);
-  clickY.push(y-1);
-  context.fillRect(x-1,y-1,1,1);
-
-  // top
-  clickX.push(x);
-  clickY.push(y-1);
-  context.fillRect(x,y-1,1,1);
-
-  //top right
-  clickX.push(x+1);
-  clickY.push(y-1);
-  context.fillRect(x+1,y-1,1,1);
-
-  //right
-  clickX.push(x+1);
-  clickY.push(y);
-  context.fillRect(x+1,y,1,1);
-
-  // bottom right
-  clickX.push(x+1);
-  clickY.push(y+1);
-  context.fillRect(x+1,y+1,1,1);
-
-  // bottom
-  clickX.push(x);
-  clickY.push(y+1);
-  context.fillRect(x,y+1,1,1);
-
-  // bottom left
-  clickX.push(x-1);
-  clickY.push(y+1);
-  context.fillRect(x-1,y+1,1,1);
-
-  ////this is just writing this part
-   // context.fillRect(x   , y   , 1 , 1);     // middle
-   // context.fillRect(x-1 , y   , 1 , 1);   // left
-   // context.fillRect(x-1 , y-1 , 1 , 1); // topleft
-   // context.fillRect(x   , y-1 , 1 , 1);   // top
-   // context.fillRect(x+1 , y-1 , 1 , 1); // top right
-   // context.fillRect(x+1 , y   , 1 , 1);   // right
-   // context.fillRect(x+1 , y+1 , 1 , 1); // bottom right
-   // context.fillRect(x   , y+1 , 1 , 1);   // bottom
-   // context.fillRect(x-1 , y+1 , 1 , 1); // bottom left
-
-  // rescaledGrid[x + y*rescaledWidth] = ;
-  updatePositionInRescaledData(x  ,y  ,1); // middle
-  updatePositionInRescaledData(x-1,y  ,1); // left
-  updatePositionInRescaledData(x-1,y-1,1); // topleft
-  updatePositionInRescaledData(x  ,y-1,1); // top
-  updatePositionInRescaledData(x+1,y-1,1); // top right
-  updatePositionInRescaledData(x+1,y  ,1); // right
-  updatePositionInRescaledData(x+1,y+1,1); // bottom right
-  updatePositionInRescaledData(x  ,y+1,1); // bottom
-  updatePositionInRescaledData(x-1,y+1,1); // bottom left
-}
-
-// this will clear the screen when called
-function clearScreen(){
-  console.log("inside the clear screen function");
-
-  // sendDataToServer();
-
-  clickX = [];
-  clickY = [];
-  context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
-  // redraw();
-}
-
 function redraw2(){
-  // context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
+  context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
 
   context.strokeStyle = "#000000";
   context.lineJoin = "round";
   context.lineWidth = 1;
 
-  // console.log("-1.  inside redraw for main ");
-  // var screenData = getScreenData();
-  // console.log("1  going to draw the origin screen data");
-  // console.log(screenData);
-  // rescaledGrid = getRescaleData(screenData);
-  // console
-  // console.log("2 got the rescaeled data, going to redraw the canvas");
-  // console.log(rescaledGrid);
-  // redrawSecondCanvas(rescaledGrid);
-  // console.log("3  inside redraw for main canvas ");
+  console.log("-1.  inside redraw for main ");
+  var screenData = getScreenData();
+  console.log("1  going to draw the origin screen data");
+  console.log(screenData);
+  rescaledGrid = getRescaleData(screenData);
+  console
+  console.log("2 got the rescaeled data, going to redraw the canvas");
+  console.log(rescaledGrid);
+  redrawSecondCanvas(rescaledGrid);
+  console.log("3  inside redraw for main canvas ");
 
-  // for(var i =0; i < clickX.length;i++) context.fillRect(clickX[i], clickY[i], 1,1);
+  for(var i =0; i < clickX.length;i++) context.fillRect(clickX[i], clickY[i], 1,1);
 }
 // redraws the screen
 function redraw(){
