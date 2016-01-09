@@ -198,6 +198,7 @@ function getRescaleData(data, oldWidth=canvasWidth, oldHeight=canvasHeight, newW
       var averagePixel = 0;
       for(var incx = 0; incx < rfx ; incx++ ){
         for(var incy = 0; incy < rfy; incy++){
+          // converts the from the smaller canvas to the bigger canvas
           var x = i * rfx + incx;// x = i * rfx + incx;
           var y = j * rfy + incy;// y = j * rfy + incy;
           averagePixel += data[ x + y*oldWidth];
@@ -214,9 +215,16 @@ function getRescaleData(data, oldWidth=canvasWidth, oldHeight=canvasHeight, newW
 }
 
 function updatePositionInRescaledData(x,y,val){
-  if(val > rescaledGrid[x + y*rescaledWidth]){
-    rescaledGrid[x + y * rescaledWidth] = val;
-    addClick2(x,y);
+  // get the refactor rate x, and refactor rate y
+  var rfx = canvasWidth/rescaledWidth;
+  var rfy = canvasHeight/rescaledHeight;
+
+  // get the value of x and y after x and y
+  var sclx = x / rfx ;
+  var scly = y / rfy ;
+  if(val > rescaledGrid[sclx + scly*rescaledWidth]){
+    rescaledGrid[sclx + scly * rescaledWidth] = val;
+    addClick2(sclx,scly);
   }
 }
 
@@ -233,7 +241,9 @@ var clickDrag = new Array();
 var paint;
 
 function addClick2(x, y){
-  console.log("going to draw at " + x + " ");
+  console.log("going to draw at " + x + " " + y + " contextScalled: " + contextScalled);
+  console.log(contextScalled);
+
   contextScalled.strokeStyle = "#000000";
   contextScalled.lineJoin = "round";
   contextScalled.lineWidth = 1;
@@ -323,6 +333,7 @@ function clearScreen(){
   clickX = [];
   clickY = [];
   context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
+  contextScalled.clearRect(0, 0, contextScalled.canvas.width, contextScalled.canvas.height); // Clears the canvas
   // redraw();
 }
 
