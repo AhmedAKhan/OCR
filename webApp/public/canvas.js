@@ -214,6 +214,17 @@ function getRescaleData(data, oldWidth=canvasWidth, oldHeight=canvasHeight, newW
   return rescaledData;
 }
 
+function rescaleInput(x,y){
+  // get the refactor rate x, and refactor rate y
+  var rfx = canvasWidth/rescaledWidth;
+  var rfy = canvasHeight/rescaledHeight;
+
+  // get the value of x and y after x and y
+  var sclx = Math.floor(x / rfx );
+  var scly = Math.floor(y / rfy) ;
+  console.log("point:("+x+","+y+") ----> ("+sclx+","+scly+")" );
+}
+
 function updatePositionInRescaledData(x,y,val){
   // get the refactor rate x, and refactor rate y
   var rfx = canvasWidth/rescaledWidth;
@@ -222,10 +233,10 @@ function updatePositionInRescaledData(x,y,val){
   // get the value of x and y after x and y
   var sclx = x / rfx ;
   var scly = y / rfy ;
-  if(val > rescaledGrid[sclx + scly*rescaledWidth]){
-    rescaledGrid[sclx + scly * rescaledWidth] = val;
+  //if(val > rescaledGrid[sclx + scly*rescaledWidth]){
+    rescaledGrid[sclx + scly * rescaledWidth] = 1; //val;
     addClick2(sclx,scly);
-  }
+  //}
 }
 
 //------------------------------ end helper functions  -----------------------------------------------------------------------
@@ -241,12 +252,10 @@ var clickDrag = new Array();
 var paint;
 
 function addClick2(x, y){
-  console.log("going to draw at " + x + " " + y + " contextScalled: " + contextScalled);
-  console.log(contextScalled);
+  // contextScalled.strokeStyle = "#000000";
+  // contextScalled.lineJoin = "round";
+  // contextScalled.lineWidth = 1;
 
-  contextScalled.strokeStyle = "#000000";
-  contextScalled.lineJoin = "round";
-  contextScalled.lineWidth = 1;
   contextScalled.fillRect(x,y,1,1);
 }
 
