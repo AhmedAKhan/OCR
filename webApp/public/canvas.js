@@ -186,6 +186,9 @@ function getScreenData(){
 function sendRequest(){
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
+    console.log("got the result:-" + xhttp.responseText+"-");
+    console.log("the xhttp object is equal to ");
+    console.log(xhttp);
     //console.log(xhttp.responseText);
     $("#result").html(xhttp.responseText);
     //if (xhttp.readyState == 4 && xhttp.status == 200) {
@@ -193,9 +196,13 @@ function sendRequest(){
     //}
   };
   //xhttp.open("GET", "http://localhost:3000/", true);
-  xhttp.open("POST", "http://localhost:3000/ocr", true);
+
+  // works
+  xhttp.open("POST", "http://45.55.166.191:3001/ocr", true);
   xhttp.setRequestHeader("Content-type", "drawing-data");
   xhttp.send(getScreenData());
+
+  // 
 }
 
 

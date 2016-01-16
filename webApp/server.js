@@ -21,6 +21,7 @@ function printData(data){
 }
 
 app.post('/ocr', function(req, res){
+  console.log("got the post request");
   var inputData = '';
   req.on("data", function(data){
     inputData += data
@@ -53,10 +54,14 @@ app.post('/ocr', function(req, res){
     // python3 convnet.py runCase
   });
 });
+app.get('/ocr', function(req, res){
+  res.send("please send a post request next tiem");
+});
+
 
 // start the server
-app.listen('3000');
-console.log('Magic happens on 3000');
+app.listen('3001');
+console.log('Magic happens on 3001');
 
 
 

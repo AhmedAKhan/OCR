@@ -164,6 +164,7 @@ def parseInput(stringInput):
 
 def main():
   print("starting main function");
+  print("the length of the sys.argv is " + str(len(sys.argv)));
   if(len(sys.argv) <= 1):
     print("Please enter an argument, either train or restore");
     return;
